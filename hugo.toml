@@ -1,5 +1,5 @@
 baseURL = "https://min-blog.github.io/"
-languageCode = "zh-cn"
+locale = "zh-cn"
 title = "Xuyu Min's Blog"
 theme = "PaperMod"
 

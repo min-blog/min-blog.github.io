@@ -2,17 +2,70 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Xuyu Min&#39;s Blog</title>
-    <link>https://min-blog.github.io/posts/</link>
+    <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on Xuyu Min&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 12 May 2026 11:16:13 -0400</lastBuildDate>
-    <atom:link href="https://min-blog.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 12 May 2026 11:56:30 -0400</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 Barrier 实现 Linux 与 Windows 共享键鼠</title>
+      <link>http://localhost:1313/posts/barrier_howto_share_keyboardmouse/</link>
+      <pubDate>Tue, 12 May 2026 11:56:30 -0400</pubDate>
+      <guid>http://localhost:1313/posts/barrier_howto_share_keyboardmouse/</guid>
+      <description>&lt;h1 id=&#34;使用-barrier-实现-linux-与-windows-共享键鼠&#34;&gt;使用 Barrier 实现 Linux 与 Windows 共享键鼠&lt;/h1&gt;
+&lt;p&gt;适用环境：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Windows 11（Server）&lt;/li&gt;
+&lt;li&gt;Ubuntu X11（Client）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;windows-端&#34;&gt;Windows 端&lt;/h1&gt;
+&lt;h2 id=&#34;版本&#34;&gt;版本&lt;/h2&gt;
+&lt;p&gt;下载 Barrier 2.3.3：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/debauchee/barrier/releases&#34;&gt;https://github.com/debauchee/barrier/releases&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;创建配置文件&#34;&gt;创建配置文件&lt;/h2&gt;
+&lt;p&gt;创建：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;screen.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;内容：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;section: screens
+    win11:
+    bsa-lab:
+end
+
+section: links
+    win11:
+        left = bsa-lab
+    bsa-lab:
+        right = win11
+end
+
+section: options
+    switchDelay = 300
+    screenSaverSync = false
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;说明：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Linux 在左&lt;/li&gt;
+&lt;li&gt;Windows 在右&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;启动-server&#34;&gt;启动 Server&lt;/h2&gt;
+&lt;p&gt;进入 Barrier 目录：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;barriers.exe -f --debug INFO --name win11 --config screen.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;等待 Linux 连接。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;linux-端&#34;&gt;Linux 端&lt;/h1&gt;
+&lt;h2 id=&#34;检查-x11&#34;&gt;检查 X11&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo $XDG_SESSION_TYPE
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出应为：&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Hello World</title>
-      <link>https://min-blog.github.io/posts/hello-world/</link>
+      <link>http://localhost:1313/posts/hello-world/</link>
       <pubDate>Tue, 12 May 2026 11:16:13 -0400</pubDate>
-      <guid>https://min-blog.github.io/posts/hello-world/</guid>
+      <guid>http://localhost:1313/posts/hello-world/</guid>
       <description>&lt;p&gt;这是我的第一篇 Hugo 博客文章。&lt;/p&gt;</description>
     </item>
   </channel>

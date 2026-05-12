@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>使用 Barrier 实现 Linux 与 Windows 共享键鼠 | Xuyu Min&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="使用 Barrier 实现 Linux 与 Windows 共享键鼠
+适用环境：
+
+Windows 11（Server）
+Ubuntu X11（Client）
+
+
+Windows 端
+版本
+下载 Barrier 2.3.3：
+https://github.com/debauchee/barrier/releases
+
+创建配置文件
+创建：
+screen.conf
+内容：
+section: screens
+    win11:
+    bsa-lab:
+end
+
+section: links
+    win11:
+        left = bsa-lab
+    bsa-lab:
+        right = win11
+end
+
+section: options
+    switchDelay = 300
+    screenSaverSync = false
+end
+说明：
+
+Linux 在左
+Windows 在右
+
+
+启动 Server
+进入 Barrier 目录：
+barriers.exe -f --debug INFO --name win11 --config screen.conf
+等待 Linux 连接。
+
+Linux 端
+检查 X11
+echo $XDG_SESSION_TYPE
+输出应为：">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/barrier_howto_share_keyboardmouse/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.89ca4972ab5e6aaa05e9a0dae0c4bb64b26585bc79e36f5cf33614eea0283abe.css" integrity="sha256-icpJcqteaqoF6aDa4MS7ZLJlhbx5429c8zYU7qAoOr4=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/barrier_howto_share_keyboardmouse/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Xuyu Min&#39;s Blog (Alt + H)">Xuyu Min&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      使用 Barrier 实现 Linux 与 Windows 共享键鼠
+    </h1>
+    <div class="post-meta">
+
+<span title='2026-05-12 11:56:30 -0400 EDT'>May 12, 2026</span>&nbsp;·&nbsp;<span>1 min</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><ul>
+            <li>
+                <a href="#%e4%bd%bf%e7%94%a8-barrier-%e5%ae%9e%e7%8e%b0-linux-%e4%b8%8e-windows-%e5%85%b1%e4%ba%ab%e9%94%ae%e9%bc%a0" aria-label="使用 Barrier 实现 Linux 与 Windows 共享键鼠">使用 Barrier 实现 Linux 与 Windows 共享键鼠</a></li>
+            <li>
+                <a href="#windows-%e7%ab%af" aria-label="Windows 端">Windows 端</a><ul>
+                    
+            <li>
+                <a href="#%e7%89%88%e6%9c%ac" aria-label="版本">版本</a></li>
+            <li>
+                <a href="#%e5%88%9b%e5%bb%ba%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6" aria-label="创建配置文件">创建配置文件</a></li>
+            <li>
+                <a href="#%e5%90%af%e5%8a%a8-server" aria-label="启动 Server">启动 Server</a></li></ul>
+            </li>
+            <li>
+                <a href="#linux-%e7%ab%af" aria-label="Linux 端">Linux 端</a><ul>
+                    
+            <li>
+                <a href="#%e6%a3%80%e6%9f%a5-x11" aria-label="检查 X11">检查 X11</a></li>
+            <li>
+                <a href="#%e4%b8%8b%e8%bd%bd%e6%ba%90%e7%a0%81" aria-label="下载源码">下载源码</a></li>
+            <li>
+                <a href="#%e5%ae%89%e8%a3%85%e4%be%9d%e8%b5%96" aria-label="安装依赖">安装依赖</a></li>
+            <li>
+                <a href="#%e5%88%9d%e5%a7%8b%e5%8c%96%e5%ad%90%e6%a8%a1%e5%9d%97" aria-label="初始化子模块">初始化子模块</a></li>
+            <li>
+                <a href="#%e4%bf%ae%e5%a4%8d-gcc-%e7%bc%96%e8%af%91%e9%97%ae%e9%a2%98" aria-label="修复 GCC 编译问题">修复 GCC 编译问题</a></li>
+            <li>
+                <a href="#%e7%bc%96%e8%af%91" aria-label="编译">编译</a></li>
+            <li>
+                <a href="#%e5%90%af%e5%8a%a8-client" aria-label="启动 Client">启动 Client</a>
+            </li>
+        </ul>
+        </li>
+        </ul>
+    </div>
+</details>
+
+  <div class="post-content md-content"><h1 id="使用-barrier-实现-linux-与-windows-共享键鼠">使用 Barrier 实现 Linux 与 Windows 共享键鼠<a hidden class="anchor" aria-hidden="true" href="#使用-barrier-实现-linux-与-windows-共享键鼠">#</a></h1>
+<p>适用环境：</p>
+<ul>
+<li>Windows 11（Server）</li>
+<li>Ubuntu X11（Client）</li>
+</ul>
+<hr>
+<h1 id="windows-端">Windows 端<a hidden class="anchor" aria-hidden="true" href="#windows-端">#</a></h1>
+<h2 id="版本">版本<a hidden class="anchor" aria-hidden="true" href="#版本">#</a></h2>
+<p>下载 Barrier 2.3.3：</p>
+<p><a href="https://github.com/debauchee/barrier/releases">https://github.com/debauchee/barrier/releases</a></p>
+<hr>
+<h2 id="创建配置文件">创建配置文件<a hidden class="anchor" aria-hidden="true" href="#创建配置文件">#</a></h2>
+<p>创建：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>screen.conf
+</span></span></code></pre></div><p>内容：</p>
+<pre tabindex="0"><code class="language-conf" data-lang="conf">section: screens
+    win11:
+    bsa-lab:
+end
+
+section: links
+    win11:
+        left = bsa-lab
+    bsa-lab:
+        right = win11
+end
+
+section: options
+    switchDelay = 300
+    screenSaverSync = false
+end
+</code></pre><p>说明：</p>
+<ul>
+<li>Linux 在左</li>
+<li>Windows 在右</li>
+</ul>
+<hr>
+<h2 id="启动-server">启动 Server<a hidden class="anchor" aria-hidden="true" href="#启动-server">#</a></h2>
+<p>进入 Barrier 目录：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cmd" data-lang="cmd"><span style="display:flex;"><span>barriers.exe -f --debug INFO --name win11 --config screen.conf
+</span></span></code></pre></div><p>等待 Linux 连接。</p>
+<hr>
+<h1 id="linux-端">Linux 端<a hidden class="anchor" aria-hidden="true" href="#linux-端">#</a></h1>
+<h2 id="检查-x11">检查 X11<a hidden class="anchor" aria-hidden="true" href="#检查-x11">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo $XDG_SESSION_TYPE
+</span></span></code></pre></div><p>输出应为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>x11
+</span></span></code></pre></div><hr>
+<h2 id="下载源码">下载源码<a hidden class="anchor" aria-hidden="true" href="#下载源码">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/debauchee/barrier.git
+</span></span></code></pre></div><hr>
+<h2 id="安装依赖">安装依赖<a hidden class="anchor" aria-hidden="true" href="#安装依赖">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>libavahi-compat-libdnssd-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>libcurl4-openssl-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>libssl-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>libx11-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>libxtst-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>libxinerama-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>libxrandr-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>libxi-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>qtbase5-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>qttools5-dev
+</span></span></code></pre></div><hr>
+<h2 id="初始化子模块">初始化子模块<a hidden class="anchor" aria-hidden="true" href="#初始化子模块">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd barrier
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git submodule update --init --recursive
+</span></span></code></pre></div><hr>
+<h2 id="修复-gcc-编译问题">修复 GCC 编译问题<a hidden class="anchor" aria-hidden="true" href="#修复-gcc-编译问题">#</a></h2>
+<p>查找：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>grep -R <span style="color:#e6db74">&#34;std::uint8_t&#34;</span> -n ~/Downloads/barrier/src
+</span></span></code></pre></div><p>例如修复：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sed -i <span style="color:#e6db74">&#39;/#include &lt;vector&gt;/a #include &lt;cstdint&gt;&#39;</span> ~/Downloads/barrier/src/lib/base/String.h
+</span></span></code></pre></div><p>若其他头文件也报：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>std::uint8_t
+</span></span></code></pre></div><p>同样补：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstdint&gt;</span><span style="color:#75715e">
+</span></span></span></code></pre></div><hr>
+<h2 id="编译">编译<a hidden class="anchor" aria-hidden="true" href="#编译">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir build
+</span></span><span style="display:flex;"><span>cd build
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cmake ..
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>make -j<span style="color:#66d9ef">$(</span>nproc<span style="color:#66d9ef">)</span>
+</span></span></code></pre></div><hr>
+<h2 id="启动-client">启动 Client<a hidden class="anchor" aria-hidden="true" href="#启动-client">#</a></h2>
+<p>将 IP 替换为 Windows 主机 IP：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./barrierc -f --debug INFO --disable-crypto --name bsa-lab 192.168.5.10
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Xuyu Min&#39;s Blog</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
