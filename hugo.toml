@@ -1,0 +1,9 @@
+baseURL = "https://min-blog.github.io/"
+languageCode = "zh-cn"
+title = "Xuyu Min's Blog"
+theme = "PaperMod"
+
+[params]
+  defaultTheme = "auto"
+  ShowReadingTime = true
+  ShowToc = true
